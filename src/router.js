@@ -41,10 +41,6 @@ export const constantRouterMap = [
             {
                 path: '/summary',
                 component: () => import('@/views/summary'),
-            },
-            {
-                path: '/infoComplete',
-                component: () => import('@/views/infoComplete'),
             }
         ], 
         hidden: true 

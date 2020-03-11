@@ -165,7 +165,6 @@ export default {
     },
     mounted(){
         if(getUser() && getUser().token){
-            this.getAuthUserBasicInfo()
         }else{
             if(this.$route.query.token){
                 this.handleLogin(this.$route.query.token)
