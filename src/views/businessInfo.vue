@@ -4,94 +4,73 @@
             <Head :activeNum="num"></Head>
             <div class="loan-box">
                 <div class="bank-box">
-                    <div v-for="(item,index) in bankList" :key="index" @click="changBank(item.loanBank,item.productNo,index)" :class="activeNumber==item.productNo?'bankActive':'bank'">
-                        <img style="height:100%" :src="showUrl+item.loanBankLogo" />
-                        <img v-show="activeNumber==item.productNo" :src="gou" style="float:right;margin-top:37px;" />
+                    <div class="bankActive" >提前付（一口价）
+                        <img :src="gou" style="float:right;margin-top:27px;" />
                     </div>
-                    <!-- <div class="bank">其他</div> -->
                 </div>
-                <div class="annotation">注：适用企业申请，不超过300万，借款企业名下、法人及其配偶、实际控制人及其配偶任意一方在深圳，北京，上海，广州，东莞，惠州，佛山，中山等地有房产</div>
-                <el-form :model="loanFormInfo" :rules="rules" ref="loanFormInfo" style="width:900px;margin:30px 0 30px 30px"
-                    label-width="100px" 
+                <div style="margin:10px 50px; margin-top:20px;">
+                    <el-alert
+                        title="对未来的Wish平台销售回款进行提前收款，最长期限3个月"
+                        type="success"
+                        show-icon>
+                    </el-alert>
+                </div>
+                <el-form :model="loanFormInfo" :rules="rules" ref="loanFormInfo" style="width:700px;margin:30px 0 30px 30px"
+                    label-width="120px" 
                     class="demo-loanFormInfo"
                     v-loading="loading"
                     element-loading-text="加载中"
                     element-loading-spinner="el-icon-loading">
-                    <el-form-item label="申请金额" prop="loanAmount">
+                    <el-form-item label="期望贷款金额" prop="loanAmount">
                         <el-col :span="12">
                             <el-input v-model="loanFormInfo.loanAmount" ></el-input>
                         </el-col>
-                        <span style="color:black;margin-left:10px;">元<label style="color:#a1a1a1;font-size:12px;">（最高申请额度300万元）</label></span>
+                        <span style="color:black;margin-left:10px;">元</span>
+                        <div class="down-line">
+                            最低1000元
+                            <el-progress :percentage="50" :show-text="false" style="width:150px;"></el-progress>
+                            最高10000元
+                            <el-button type="primary" size="mini" icon="el-icon-upload2">提升额度</el-button>
+                        </div>
                     </el-form-item>
-                    <el-form-item label="申请期限" prop="loanTerm">
+                    <el-form-item label="资金用途" prop="loanTerm">
                         <el-col :span="12">
-                            <el-input v-model="loanFormInfo.loanTerm" ></el-input>
+                            <el-radio-group v-model="loanFormInfo.loanTerm">
+                                <el-radio-button label="日常资金周转"></el-radio-button>
+                                <el-radio-button label="待定"></el-radio-button>
+                                <el-radio-button label="其他"></el-radio-button>
+                            </el-radio-group>
                         </el-col>
-                        <span style="color:black;margin-left:10px;">天<label style="color:#a1a1a1;font-size:12px;">（最长期限90天）</label></span>
                     </el-form-item>
-                    <el-form-item label="计息方式" prop="interestMode">
+                    <el-form-item label="融资期限" prop="interestMode">
                         <el-col :span="12">
-                            <el-input v-model="loanFormInfo.interestMode" ></el-input>
+                            90天
                         </el-col>
-                        <span style="color:#43a0fd;margin-left:10px;">《计息方式说明》</span>
                     </el-form-item>
                     <el-form-item label="利率" prop="loanRate">
                         <el-col :span="12">
-                            <el-input v-model="loanFormInfo.loanRate" disabled></el-input>
+                            1.9500%/次
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="还款日" prop="monthRepaymentDay">
+                    <el-form-item label="手续费" prop="monthRepaymentDay">
                         <el-col :span="12">
-                            <el-input v-model="loanFormInfo.monthRepaymentDay" ></el-input>
-                        </el-col>
-                        <span style="color:#43a0fd;margin-left:10px;">《还款日说明》</span>
-                    </el-form-item>
-                    <el-form-item label="贷款用途" prop="purpose">
-                        <el-col :span="12">
-                            <el-input v-model="loanFormInfo.purpose" ></el-input>
+                            0.20%/次
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="房子所在地" prop="houseLocation" v-if="activeNumber==1">
-                        <div style="display: flex">
-                            <v-distpicker
-                            @selected="onSelected" 
-                            class="address"
-                            :province="loanFormInfo.houseLocation && loanFormInfo.houseLocation.province" 
-                            :city="loanFormInfo.houseLocation && loanFormInfo.houseLocation.city" 
-                            :area="loanFormInfo.houseLocation && loanFormInfo.houseLocation.area"/>
-                            <el-input v-model="loanFormInfo.houseLocation && loanFormInfo.houseLocation.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
-                        </div>
-                    </el-form-item>
-                    <el-form-item label="保证金账户" prop="bondAccount" v-if="activeNumber==2">
-                        <el-col :span="12">
-                            <el-input v-model="loanFormInfo.bondAccount" ></el-input>
-                        </el-col>
-                        <span style="color:#43a0fd;margin-left:10px;">（需20%保证金）</span>
-                    </el-form-item>
-                    <el-form-item label="物流商" prop="logistics" v-if="activeNumber==3">
-                        <el-col :span="12">
-                            <el-select v-model="loanFormInfo.logistics" placeholder="请选择物流商">
-                                <el-option value="邮政"></el-option>
-                                <el-option value="万邑通"></el-option>
-                                <el-option value="递四方"></el-option>
-                            </el-select>
+                    <el-form-item label="费用总计" prop="purpose">
+                        <el-col :span="12" style="color:#F36D6D">
+                            1020.00元
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="">
-                        <el-col :span="1">
-                            <el-checkbox-group v-model="check">
-                                <el-checkbox label="" name="type"></el-checkbox>
-                            </el-checkbox-group>
+                    <el-form-item label="利息" prop="purpose">
+                        <el-col :span="12" style="color:#F36D6D">
+                            42.52元
                         </el-col>
-                        <span style="color:#606266">我已阅读并同意
-                            <a style="color:#409EFF;cursor:pointer;" href="./index_files/豆沙包商户平台注册协议.pdf" target="_blank" >《线上征信查询协议》</a>
-                        </span>
                     </el-form-item>
-                    <div class="submit-btn" style="margin-left:100px;" @click="submitRegisterForm('loanFormInfo')">立即申请</div>
+                    <div class="submit-btn" style="margin-left:120px;" @click="submitRegisterForm('loanFormInfo')">下一步</div>
                 </el-form>
             </div>
         </div> 
-        <Footer></Footer>
     </section>
 </template>
 
@@ -116,7 +95,7 @@ export default {
                 productId:'',
                 loanAmount: '',
                 loanRate: '0.33%',
-                loanTerm:'',
+                loanTerm:'日常资金周转',
                 interestMode: '',
                 purpose:'',
                 houseLocation:{
@@ -144,7 +123,6 @@ export default {
                 ],
                 loanTerm: [
                     { required: true, message: '请输入申请期限', trigger: 'blur' },
-                    { pattern: /^[0-9]*$/, message: '只能输入数字' }
                 ],
                 interestMode: [
                     { required: true, message: '请输入计息方式', trigger: 'blur' },
@@ -205,40 +183,41 @@ export default {
         },
       //注册
         submitRegisterForm(formName) {
-            if(!this.loanFormInfo.loanBank){
-                this.$message.warning('请选择放款银行')
-                return
-            }
-            if(!this.check){
-                this.$message.warning('请勾选我已阅读并同意 《线上征信查询协议》')
-                return
-            }
-            if(this.loanFormInfo.loanAmount>3000000||this.loanFormInfo.loanAmount<0){
-                this.$message.warning('申请额度0-300万元')
-                return
-            }
-            if(this.activeNumber==1&&(!this.loanFormInfo.houseLocation.province||!this.loanFormInfo.houseLocation.city||!this.loanFormInfo.houseLocation.area||!this.loanFormInfo.houseLocation.Street)){
-                this.$message.error("房子所在地不能为空")
-                return
-            }
-            if(this.activeNumber==2&&!this.loanFormInfo.bondAccount){
-                this.$message.error("保证金账户不能为空")
-                return
-            }
-            if(this.activeNumber==3&&!this.loanFormInfo.logistics){
-                this.$message.error("物流商不能为空")
-                return
-            }
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.loanFormInfo.loanRate = 0.0033
-                    localStorage.setItem('loanFormInfo', JSON.stringify(this.loanFormInfo))
-                    this.$router.push({path: '/shopAuth' })
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
+            this.$router.push({path: '/shopAuth' })
+            // if(!this.loanFormInfo.loanBank){
+            //     this.$message.warning('请选择放款银行')
+            //     return
+            // }
+            // if(!this.check){
+            //     this.$message.warning('请勾选我已阅读并同意 《线上征信查询协议》')
+            //     return
+            // }
+            // if(this.loanFormInfo.loanAmount>3000000||this.loanFormInfo.loanAmount<0){
+            //     this.$message.warning('申请额度0-300万元')
+            //     return
+            // }
+            // if(this.activeNumber==1&&(!this.loanFormInfo.houseLocation.province||!this.loanFormInfo.houseLocation.city||!this.loanFormInfo.houseLocation.area||!this.loanFormInfo.houseLocation.Street)){
+            //     this.$message.error("房子所在地不能为空")
+            //     return
+            // }
+            // if(this.activeNumber==2&&!this.loanFormInfo.bondAccount){
+            //     this.$message.error("保证金账户不能为空")
+            //     return
+            // }
+            // if(this.activeNumber==3&&!this.loanFormInfo.logistics){
+            //     this.$message.error("物流商不能为空")
+            //     return
+            // }
+            // this.$refs[formName].validate((valid) => {
+            //     if (valid) {
+            //         this.loanFormInfo.loanRate = 0.0033
+            //         localStorage.setItem('loanFormInfo', JSON.stringify(this.loanFormInfo))
+            //         this.$router.push({path: '/shopAuth' })
+            //     } else {
+            //         console.log('error submit!!');
+            //         return false;
+            //     }
+            // });
             
         },
         // 切换银行
@@ -280,14 +259,16 @@ export default {
                 .bankActive{
                     float: left;
                     margin-left: 20px;
-                    margin-left: 30px;
-                    width: 220px;
-                    height: 60px;
-                    border: 1px solid #e71d5d;
+                    margin-left: 50px;
+                    font-size: 12px;
+                    width: 200px;
+                    height: 50px;
+                    border: 1px solid #409EFF;
                     border-radius: 3px;
                     text-align: center;
-                    line-height: 60px;
+                    line-height: 50px;
                     cursor: pointer;
+                    color: #4e4d4d;
                 }
                
             }
@@ -295,7 +276,7 @@ export default {
                 clear: both;
                 color: #a1a1a1;
                 font-size: 12px;
-                margin-left: 30px;
+                margin-left: 50px;
                 margin-top: 15px;
             }
         }
@@ -303,6 +284,15 @@ export default {
     position: absolute;
     top: -8px;
     right: -8px;
+}
+.down-line{
+    width: 400px;
+    font-size: 12px;
+    color:#606266;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 .form-wrap{
     margin: 20px 0;

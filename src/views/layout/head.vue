@@ -4,7 +4,6 @@
             <el-step title="贷款信息"></el-step>
             <el-step title="店铺授权"></el-step>
             <el-step title="补充信息"></el-step>
-            <el-step title="上传附件"></el-step>
             <el-step title="提交申请"></el-step>
         </el-steps>
     </div>
@@ -20,7 +19,7 @@ export default {
     },
     data() {
         return {
-            wid:'20%',
+            wid:'25%',
         }  
   }
 }

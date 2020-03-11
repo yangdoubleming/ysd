@@ -3,9 +3,6 @@
         <div class="container">
             <Head :activeNum="num"></Head>
             <el-card class="loan-box" shadow="never">
-                <div slot="header" class="clearfix">
-                    <span style="margin-left:40px;font-weight:bolder;">{{activeName}}</span>
-                </div>
                 <el-form :model="allForm" ref="allForm"  style="width:900px;margin:30px 0 30px 30px"
                     label-width="180px" 
                     class="demo-registerForm"
@@ -13,33 +10,15 @@
                     element-loading-text="加载中"
                     element-loading-spinner="el-icon-loading">
                     <div v-show="active==1">
-                        <el-form-item label="实际控制人姓名" prop="controllerName">
+                        <div slot="header" class="clearfix" style="margin-bottom:30px;">
+                            <span style="margin-left:40px;font-weight:bolder;">联系信息</span>
+                        </div>
+                        <el-form-item label="联系邮箱" prop="controllerName">
                             <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerName" disabled ></el-input>
+                                <el-input v-model="allForm.controllerInfo.controllerName" ></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="实际控制人身份证号" prop="controllerCard">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerCard"  disabled></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="实际控制人手机号" prop="controllerTelephone">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerTelephone" disabled ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="实际控制人邮箱" prop="controllerEmail">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerEmail" disabled ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="实际控制人学历" prop="controllerEducation">
-                            <el-select v-model="allForm.controllerInfo.controllerEducation">
-                                <el-option value="大专以下"></el-option>
-                                <el-option value="本科以上"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="现家庭住址" prop="liveAddress">
+                        <el-form-item label="居住地址" prop="controllerCard">
                             <div style="display: flex">
                                 <v-distpicker
                                 @selected="onSelectedA" 
@@ -50,184 +29,30 @@
                                 <el-input v-model="allForm.controllerInfo.liveAddress && allForm.controllerInfo.liveAddress.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
                             </div>  
                         </el-form-item>
-                        <el-form-item label="婚姻情况" prop="maritalStatus">
-                            <el-radio-group v-model="allForm.controllerInfo.maritalStatus">
-                                <el-radio label="已婚"></el-radio>
-                                <el-radio label="未婚"></el-radio>
-                                <el-radio label="离异"></el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <div v-if="allForm.controllerInfo.maritalStatus=='已婚'">
-                            <el-form-item label="实际控制人配偶姓名" prop="spouseName">
-                                <el-col :span="12">
-                                    <el-input v-model="allForm.controllerInfo.spouseName" ></el-input>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="实际控制人配偶身份证号" prop="spouseCard">
-                                <el-col :span="12">
-                                    <el-input v-model="allForm.controllerInfo.spouseCard" ></el-input>
-                                </el-col>
-                            </el-form-item>
-                            <el-form-item label="实际控制人配偶手机号" prop="spouseTelephone">
-                                <el-col :span="12">
-                                    <el-input v-model="allForm.controllerInfo.spouseTelephone" ></el-input>
-                                </el-col>
-                            </el-form-item>
+                        <div slot="header" class="clearfix" style="margin-bottom:30px;">
+                            <span style="margin-left:40px;font-weight:bolder;">紧急联系人</span>
                         </div>
-                        <p style="color: #EB105C;margin-left: 180px;" v-if="active == 1">提示：该页所有字段为必填信息</p>
-                    </div>
-                    <div v-show="active==2">
-                        <el-form-item label="法人代表姓名" prop="legalPersonName">
+                        <el-form-item label="联系人姓名" prop="controllerName">
                             <el-col :span="12">
-                                <el-input v-model="allForm.personInfo.legalPersonName" ></el-input>
+                                <el-input v-model="allForm.controllerInfo.controllerName" ></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="法人代表身份证号码" prop="idCard">
+                        <el-form-item label="联系人手机" prop="controllerCard">
                             <el-col :span="12">
-                                <el-input v-model="allForm.personInfo.idCard" ></el-input>
+                                <el-input v-model="allForm.controllerInfo.controllerCard"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="邮箱" prop="legalPersonEmail">
+                        <el-form-item label="联系人关系" prop="controllerCard">
                             <el-col :span="12">
-                                <el-input v-model="allForm.personInfo.legalPersonEmail" ></el-input>
+                                <el-input v-model="allForm.controllerInfo.controllerCard"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="手机号" prop="legalPersonPhone">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.personInfo.legalPersonPhone"></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="法人代表现居地址" prop="liveAddress">
-                            <div style="display: flex">
-                                <v-distpicker
-                                @selected="onSelectedB" 
-                                class="address"
-                                :province="allForm.personInfo.liveAddress && allForm.personInfo.liveAddress.province" 
-                                :city="allForm.personInfo.liveAddress && allForm.personInfo.liveAddress.city" 
-                                :area="allForm.personInfo.liveAddress && allForm.personInfo.liveAddress.area"/>
-                                <el-input v-model="allForm.personInfo.liveAddress && allForm.personInfo.liveAddress.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
-                            </div>  
-                        </el-form-item>
-                        <el-form-item label="法人代表现办公地址" prop="workAddress">
-                            <div style="display: flex">
-                                <v-distpicker
-                                @selected="onSelectedC" 
-                                class="address"
-                                :province="allForm.personInfo.workAddress && allForm.personInfo.workAddress.province" 
-                                :city="allForm.personInfo.workAddress && allForm.personInfo.workAddress.city" 
-                                :area="allForm.personInfo.workAddress && allForm.personInfo.workAddress.area"/>
-                                <el-input v-model="allForm.personInfo.workAddress && allForm.personInfo.workAddress.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
-                            </div>  
-                        </el-form-item>
-                        <!-- <el-form-item label="与实际控制人为同一人" prop="companyName">
-                            <el-col :span="12">
-                                <el-input v-model="personInfo.telephon" ></el-input>
-                            </el-col>
-                        </el-form-item> -->
-                        <p style="color: #EB105C;margin-left: 180px;" v-if="active == 2">提示：该页所有字段为必填信息</p>
-                    </div>
-                    <div v-show="active==3">
-                        <el-form-item label="企业名称" prop="companyName">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.companyName" disabled ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="统一社会信用代码" prop="creditCode" >
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.creditCode" disabled ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="法人代表姓名" prop="legalPersonName">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.legalPersonName" ></el-input>
-                            </el-col>
-                            <span style="color:red;">（必填）</span>
-                        </el-form-item>
-                        <el-form-item label="法人现办公地址" prop="workAddress">
-                            <div style="display: flex">
-                                <v-distpicker
-                                @selected="onSelectedD" 
-                                class="address"
-                                :province="allForm.companyInfo.workAddress && allForm.companyInfo.workAddress.province" 
-                                :city="allForm.companyInfo.workAddress && allForm.companyInfo.workAddress.city" 
-                                :area="allForm.companyInfo.workAddress && allForm.companyInfo.workAddress.area"/>
-                                <el-input v-model="allForm.companyInfo.workAddress && allForm.companyInfo.workAddress.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
-                                <span style="color:red;">（必填）</span>
-                            </div>  
-                        </el-form-item>
-                        <el-form-item label="企业经营时长" prop="businessHours">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.businessHours" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="近一年总销售额" prop="salesVolume">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.salesVolume" ></el-input>
-                            </el-col>
-                            <span style="color:red;">（必填）</span>
-                        </el-form-item>
-                        <el-form-item label="近一年退货率" prop="returnRate">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.returnRate" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="店铺经营时长" prop="shopHours">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.shopHours" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="近一年单点销售占比" prop="salesShare">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.salesShare" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="封店率" prop="closingRate">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.closingRate"></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="征信状况" prop="creditReporting">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.creditReporting" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="征信查询次数" prop="creditEnquiryFrequency">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.creditEnquiryFrequency" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="开户行" prop="openingBank">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.openingBank" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="开户行账号" prop="openingBankAccount">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.openingBankAccount" ></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="需放款企业物流合作时长" prop="logisticsCooperationDuration">
-                            <el-col :span="12">
-                                <el-input v-model="allForm.companyInfo.logisticsCooperationDuration" ></el-input>
-                            </el-col>
-                            <span style="color:red;">（必填）</span>
-                        </el-form-item>
-                        <!-- <el-form-item label="法人信息同借款人信息" prop="companyName">
-                            <el-col :span="12">
-                                <el-input v-model="companyInfo.telephon" ></el-input>
-                            </el-col>
-                        </el-form-item> -->
                     </div>
                     <div style="margin-left:150px;overflow:hidden;margin-bottom:30px">
-                        <div v-if="active==2||active==3" class="submit-btn" style="float:left;margin-left:30px;" @click="reduceActive">上一步</div>
-                        <div v-if="active==1||active==2" class="submit-btn" style="margin-left:30px;float:left;" @click="addActive">下一步</div>
-                        <div v-if="active==3" class="submit-btn" style="margin-left:30px;float:left;" @click="submit('allForm')">提交</div>
+                        <div class="submit-btn" style="margin-left:30px;float:left;" @click="addActive">下一步</div>
                     </div>
                 </el-form>
             </el-card>
-            <div class="loan-box">
-                
-            </div>
         </div> 
     </section>
 </template>
@@ -322,48 +147,7 @@ export default {
             this.active==2?this.activeName = "法人代表信息":this.activeName = "实际控制人信息"
         },
         addActive() {
-            if(this.active==1){
-                if(!this.allForm.controllerInfo.maritalStatus||!this.allForm.controllerInfo.controllerEducation||!this.allForm.controllerInfo.liveAddress.province||!this.allForm.controllerInfo.liveAddress.city||!this.allForm.controllerInfo.liveAddress.area||!this.allForm.controllerInfo.liveAddress.Street){
-                    this.$message.warning('该页所有字段必填')
-                    return
-                }
-                if(this.allForm.controllerInfo.maritalStatus=='已婚'){
-                    if(!this.allForm.controllerInfo.spouseName||!this.allForm.controllerInfo.spouseCard||!this.allForm.controllerInfo.spouseTelephone){
-                        this.$message.warning('配偶信息不能为空')
-                        return
-                    }
-
-                }
-                if(this.allForm.controllerInfo.maritalStatus=='已婚'&&!this.nameReg(this.allForm.controllerInfo.spouseName)){
-                    return
-                }
-                if(this.allForm.controllerInfo.maritalStatus=='已婚'&&!this.checkIdCard(this.allForm.controllerInfo.spouseCard)){
-                    return
-                }
-                if(this.allForm.controllerInfo.maritalStatus=='已婚'&&!this.checkPhone(this.allForm.controllerInfo.spouseTelephone)){
-                    return
-                }
-            }
-            if(this.active==2){
-                if(!this.allForm.personInfo.legalPersonName||!this.allForm.personInfo.idCard||!this.allForm.personInfo.legalPersonPhone||!this.allForm.personInfo.legalPersonEmail||!this.allForm.personInfo.liveAddress.province||!this.allForm.personInfo.liveAddress.city||!this.allForm.personInfo.liveAddress.area||!this.allForm.personInfo.liveAddress.Street||!this.allForm.personInfo.workAddress.province||!this.allForm.personInfo.workAddress.city||!this.allForm.personInfo.workAddress.area||!this.allForm.personInfo.workAddress.Street){
-                    this.$message.warning('该页所有字段必填')
-                    return
-                }
-                if(!this.nameReg(this.allForm.personInfo.legalPersonName)){
-                    return
-                }
-                if(!this.checkIdCard(this.allForm.personInfo.idCard)){
-                    return
-                }
-                if(!this.checkEmail(this.allForm.personInfo.legalPersonEmail)){
-                    return
-                }
-                if(!this.checkPhone(this.allForm.personInfo.legalPersonPhone)){
-                    return
-                }
-            }
-            this.active++
-            this.active==2?this.activeName = "法人代表信息":this.activeName = "企业信息"
+            this.$router.push({path: '/uploadInfo'})
         },
         submit(formName) {
             if(!this.allForm.companyInfo.salesVolume||!this.allForm.companyInfo.legalPersonName||!this.allForm.companyInfo.logisticsCooperationDuration||!this.allForm.companyInfo.workAddress.province||!this.allForm.companyInfo.workAddress.city||!this.allForm.companyInfo.workAddress.area||!this.allForm.companyInfo.workAddress.Street){
