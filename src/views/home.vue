@@ -42,9 +42,6 @@
     import content2 from '@/assets/register/content2.png'
     import content3 from '@/assets/register/content3.png'
     import content4 from '@/assets/register/content4.png'
-    import youchu from '@/assets/register/youchu.jpg'
-    import guangda from '@/assets/register/guangda.jpg'
-    import jianshe from '@/assets/register/jianshe.jpg'
     import { getLoanProductList } from '@/api/application'
     import { BASE_URL, IMG_URL_show } from '@/utils/config'
 export default {
@@ -59,9 +56,6 @@ export default {
             content2,
             content3,
             content4,
-            youchu,
-            guangda,
-            jianshe,
             checkStatus:false,
             picList:[]
         }

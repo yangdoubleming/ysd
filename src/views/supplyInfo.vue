@@ -234,7 +234,6 @@
 
 <script>
 import VDistpicker from 'v-distpicker'
-import youchu from '@/assets/register/logo-youchu.jpg'
 import Footer from './layout/footer'
 import Head from './layout/head'
 import { addCiCompany, getAuthUserBasicInfo } from '@/api/application'

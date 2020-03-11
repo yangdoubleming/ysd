@@ -172,7 +172,6 @@
 </template>
 
 <script>
-import youchu from '@/assets/register/logo-youchu.jpg'
 import Head from './layout/head'
 import moment from 'moment'
 import { shopInfo, getShopList, shopCredit } from '@/api/application'

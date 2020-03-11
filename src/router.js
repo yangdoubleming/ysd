@@ -11,56 +11,16 @@ export const constantRouterMap = [
     {
         path: '/',
         component: Layout,
-        redirect: '/home',
+        redirect: '/businessInfo',
         children: [
             {
-                path: '/home',
-                component: () => import('@/views/home'),
+                path: '/businessInfo',
+                component: () => import('@/views/businessInfo'),
             },
             {
                 path: '/businessInfo',
                 name: 'businessInfo',
                 component: () => import('@/views/businessInfo'),
-            },
-            {
-                path: '/insuranceInfo',
-                component: () => import('@/views/insuranceInfo'),
-            },
-            {
-                path: '/loanRecords',
-                component: () => import('@/views/loanRecords'),
-            },
-            {
-                path: '/loanDetails',
-                component: () => import('@/views/loanDetails'),
-            },
-            {
-                path: '/registerEnd',
-                component: () => import('@/views/registerEnd'),
-            },
-            {
-                path: '/authorize',
-                component: () => import('@/views/authorize'),
-            },
-            {
-                path: '/amazonAuthorizeList',
-                component: () => import('@/views/authorize/storeAuthorize/amazonAuthorizeList'),
-            },
-            {
-                path: '/wishAuthorizeList',
-                component: () => import('@/views/authorize/storeAuthorize/wishAuthorizeList'),
-            },
-            {
-                path: '/ebayAuthorizeList',
-                component: () => import('@/views/authorize/storeAuthorize/ebayAuthorizeList'),
-            },
-            {
-                path: '/credit',
-                component: () => import('@/views/credit'),
-            },
-            {
-                path: '/orderList',
-                component: () => import('@/views/orderList'),
             },
             {
                 path: '/shopAuth',

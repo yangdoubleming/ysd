@@ -96,11 +96,11 @@
 </template>
 
 <script>
-import youchu from '@/assets/register/logo-youchu.jpg'
 import gou from '@/assets/register/gou.png'
 import Footer from './layout/footer'
 import Head from './layout/head'
 import VDistpicker from 'v-distpicker'
+import { getUser } from '@/utils/auth'
 import { BASE_URL, IMG_URL_show } from '@/utils/config'
 import { getLoanProductList } from '@/api/application'
 export default {
@@ -164,6 +164,15 @@ export default {
     computed: {
     },
     mounted(){
+        if(getUser() && getUser().token){
+            this.getAuthUserBasicInfo()
+        }else{
+            if(this.$route.query.token){
+                this.handleLogin(this.$route.query.token)
+            }else{
+                window.location.href = `http://login.dowsure.com/login?href=${window.location.origin}${window.location.pathname}&api=${BASE_URL}/user/login`
+            }
+        }
         // 获取银行
         getLoanProductList().then(res => {
             this.loading = false
@@ -184,6 +193,17 @@ export default {
         })
     },
     methods: {
+        handleLogin(token) {
+            this.loading = true;
+            this.$store.dispatch("Login", token).then(() => {
+                this.loading = false;
+                this.getAuthUserBasicInfo()
+            })
+            .catch((err) => {
+                this.loading = false;
+                this.$message.error(err.msg);
+            });
+        },
       //注册
         submitRegisterForm(formName) {
             if(!this.loanFormInfo.loanBank){
@@ -270,15 +290,7 @@ export default {
                     line-height: 60px;
                     cursor: pointer;
                 }
-                .img-logo1{
-                    background-image: url(./../assets/register/logo-youchu.jpg);
-                }
-                .img-logo2{
-                    background-image: url(./../assets/register/logo-jianshe.jpg);
-                }
-                .img-logo3{
-                    background-image: url(./../assets/register/logo-guangda.jpg);
-                }
+               
             }
             .annotation{
                 clear: both;

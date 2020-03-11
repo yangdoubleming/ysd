@@ -14,18 +14,18 @@ router.beforeEach((to, from, next) => {
         } else {
             Message.error('登录异常，请重新登录')
             store.dispatch('FedLogOut').then(() => {
-                next({ path: '/home' })
+                next({ path: '/businessInfo' })
             })
         }
     } else {
-        if (to.path.indexOf('/credit') !== -1||to.path.indexOf('/home') !== -1||to.path.indexOf('/infoComplete') !== -1) {
+        if (to.path.indexOf('/businessInfo') !== -1||to.path.indexOf('/credit') !== -1) {
             next()
         } else {
             if(to.path=='/'){
-                next('/home')
+                next('/businessInfo')
             }else{
                 Message.warning('请先登录')
-                next('/infoComplete')
+                next('/businessInfo')
             }
         }
     }
