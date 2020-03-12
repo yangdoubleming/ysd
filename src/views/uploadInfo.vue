@@ -4,9 +4,9 @@
             <Head :activeNum="num"></Head>
             <el-card class="loan-box" shadow="never">
                 <div class="wscn-http404-container">
-                    <el-form :model="registerForm" :rules="rules" ref="registerForm" 
+                    <el-form :model="loanFormInfo" :rules="rules" ref="loanFormInfo" 
                         label-width="100px" 
-                        class="demo-registerForm"
+                        class="demo-loanFormInfo"
                         v-loading="loading"
                         element-loading-text="注册中"
                         element-loading-spinner="el-icon-loading">
@@ -17,12 +17,12 @@
                             </div>
                          </div>
                         <el-form-item label="手机号" prop="telephone">
-                            +86 150****1234
+                            +86 {{telephone}}
                         </el-form-item>
                         <el-row :gutter="24">
                             <el-col :span="14">
-                            <el-form-item label="验证码"  prop="verifyCode">
-                                <el-input v-model="registerForm.verifyCode"></el-input>
+                            <el-form-item label="验证码"  prop="validateCode">
+                                <el-input v-model="loanFormInfo.validateCode"></el-input>
                             </el-form-item>
                             </el-col>
                             <el-col :span="8">
@@ -41,8 +41,8 @@
                             </span>
                         </el-form-item>
                         <div class="btn-box">
-                            <router-link to="/shopAuth"><div class="btn2" style="margin-right:20px;"> 上一步</div></router-link>
-                            <div class="btn" @click="submitRegisterForm('registerForm')">提交申请</div>
+                            <div class="btn2" style="margin-right:20px;" @click="back"> 上一步</div>
+                            <div class="btn" @click="submitRegisterForm('loanFormInfo')">提交申请</div>
                         </div>
                     </el-form>
                 </div>
@@ -54,7 +54,7 @@
 <script>
     import Head from './layout/head'
     import { BASE_URL } from '@/utils/config'
-    // import { isUsernameRegister, getVerifyCode, register, login  } from '@/api/register'
+    import { sendVerifyCode, receivablesloan  } from '@/api/application'
 
 export default {
     components: {
@@ -68,43 +68,11 @@ export default {
         setWidth:'520px',
         photoCodeUrl:'',
         num:3,
-        registerForm: {
-            telephone: '',
-            password: '',
-            confirmPassword: '',
-            companyName: '',
-            productList: ['0'],
-            verifyCode: '',
-            photoCode:''
-        },
-        loginForm:{
-            telephone: '',
-            password: '',
+        loanFormInfo: {
+            validateCode: '',
         },
         rules: {
-            telephone: [
-                { required: true, message: '请输入手机号', trigger: 'blur' },
-                { pattern: /^1\d{10}$/, message: '请输入正确的手机号', trigger: 'blur' }
-            ],
-            password: [
-                { required: true, message: '请输入密码', trigger: 'blur' },
-                { min: 6, max:20,message: '密码在6-20位', trigger: 'blur' }
-            ],
-            confirmPassword: [
-                { required: true, message: '请确认密码', trigger: 'blur' },
-                { min: 6, max:20,message: '密码在6-20位', trigger: 'blur' }
-            ],
-            companyName: [
-                { required: true, message: '请输入企业名称', trigger: 'blur' },
-                { max:50,message: '不能超过50个字', trigger: 'blur' }
-            ],
-            productList: [
-                { type: 'array', required: true, message: '请选择企业类型', trigger: 'blur' }
-            ],
-            photoCode: [
-                { required: true, message: '请输入图片验证码', trigger: 'blur' }
-            ],
-            verifyCode: [
+            validateCode: [
                 { required: true, message: '请输入验证码', trigger: 'blur' }
             ]
         },
@@ -112,62 +80,45 @@ export default {
         loginDialogVisible:false,
         paracont:'获取验证码',
         btnStatus:false,
-        getCodeStatus:false
+        getCodeStatus:false,
+        telephone:''
     }
   },
   computed: {
     
   },
   mounted(){
-    //   this.getPhotoCode()
+      let tele = JSON.parse(localStorage.getItem('user')).telephone
+      this.telephone =  tele.replace(/^(\d{3})\d{4}(\d+)/,"$1****$2")
   },
   methods: {
-    //   goback(){
-    //       window.history.go(-1);
-    //   },
-    //注册
-    submitRegisterForm(formName) {
-        this.num = 4
-        this.$router.push({path: '/summary'})
-    // this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //         if(this.registerForm.password!=this.registerForm.confirmPassword){
-    //             this.$message.warning('密码和确认密码不相同')
-    //             return false;
-    //         }
-    //         if(!this.getCodeStatus){
-    //             this.$message.warning('请先获取验证码！')
-    //             return false;
-    //         }
-    //         isUsernameRegister({telephone:this.registerForm.telephone}).then(result=>{
-    //             if(this.check){
-    //                 this.loading = true
-    //                 this.registerForm.channel = this.$route.query.channel||''
-    //                 register(this.registerForm).then(result=>{
-    //                     this.loading = false
-    //                     this.$message.success(result.msg)
-    //                     goback()
-    //                 }).catch(err=>{
-    //                     this.loading = false
-    //                     this.$message.error(err.msg)
-    //                 })
-    //             }else{
-    //                 this.$message.warning('请先阅读并同意《豆沙包商户平台注册协议》')
-    //             }
-    //         }).catch(err=>{
-    //             this.$message.error('手机号已注册，请直接登录')
-    //             return false
-    //         })
-            
-    //     } else {
-    //         return false;
-    //     }
-    // });
+    back(){
+        window.history.go(-1)
     },
-    //获取图形验证码
-    getPhotoCode(){
-        var time = new Date().getTime()
-        this.photoCodeUrl = `http://api.dowsure.com/freightsure/code/photoCode?${time}`
+    //注册
+    submitRegisterForm() {
+        if(!this.getCodeStatus){
+            this.$message.warning('请先获取验证码！')
+            return false;
+        }
+        if(!this.loanFormInfo.validateCode){
+            this.$message.warning('请输入验证码')
+            return false;
+        }
+        if(this.check){
+            let myData = Object.assign(JSON.parse(localStorage.getItem('loanFormInfo')), this.loanFormInfo)
+            this.loading = true
+            receivablesloan(myData).then(result=>{
+                this.loading = false
+                this.$router.push({path: '/summary'})
+            }).catch(err=>{
+                this.loading = false
+                this.$message.error(err.msg)
+            })
+        }else{
+            this.$message.warning('请先阅读并同意相关协议')
+        }
+            
     },
     //获取验证码
     getCode () {
@@ -175,12 +126,12 @@ export default {
         var second = null, timePromise = undefined;
         if (second === null) {
             second = 60;
-            if (!this.registerForm.telephone) {
+            if (!JSON.parse(localStorage.getItem('user')).telephone) {
                 this.$message({message:'手机号不能为空',type:'warning'})
                 second = null;
                 return false;
             } else {
-                getVerifyCode({phoneNo:this.registerForm.telephone,photoCode:this.registerForm.photoCode}).then(result => {
+                sendVerifyCode().then(result => {
                     const _this = this;
                     this.btnStatus = true;
                     timePromise = setInterval(function () {

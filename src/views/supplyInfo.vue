@@ -3,7 +3,7 @@
         <div class="container">
             <Head :activeNum="num"></Head>
             <el-card class="loan-box" shadow="never">
-                <el-form :model="allForm" ref="allForm"  style="width:900px;margin:30px 0 30px 30px"
+                <el-form :model="loanFormInfo" ref="loanFormInfo" :rules="rules"  style="width:900px;margin:30px 0 30px 30px"
                     label-width="180px" 
                     class="demo-registerForm"
                     v-loading="loading"
@@ -13,44 +13,50 @@
                         <div slot="header" class="clearfix" style="margin-bottom:30px;">
                             <span style="margin-left:40px;font-weight:bolder;">联系信息</span>
                         </div>
-                        <el-form-item label="联系邮箱" prop="controllerName">
+                        <el-form-item label="联系邮箱" prop="contactEmail">
                             <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerName" ></el-input>
+                                <el-input v-model="loanFormInfo.contactEmail" ></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="居住地址" prop="controllerCard">
+                        <el-form-item label="居住地址" prop="contactLocation">
                             <div style="display: flex">
                                 <v-distpicker
                                 @selected="onSelectedA" 
                                 class="address"
-                                :province="allForm.controllerInfo.liveAddress && allForm.controllerInfo.liveAddress.province" 
-                                :city="allForm.controllerInfo.liveAddress && allForm.controllerInfo.liveAddress.city" 
-                                :area="allForm.controllerInfo.liveAddress && allForm.controllerInfo.liveAddress.area"/>
-                                <el-input v-model="allForm.controllerInfo.liveAddress && allForm.controllerInfo.liveAddress.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
+                                :province="loanFormInfo.contactLocation && loanFormInfo.contactLocation.province" 
+                                :city="loanFormInfo.contactLocation && loanFormInfo.contactLocation.city" 
+                                :area="loanFormInfo.contactLocation && loanFormInfo.contactLocation.area"/>
+                                <el-input v-model="loanFormInfo.contactLocation && loanFormInfo.contactLocation.Street" placeholder="请输入街道地址" class="inp" style="margin-left: 5px"></el-input>
                             </div>  
                         </el-form-item>
                         <div slot="header" class="clearfix" style="margin-bottom:30px;">
                             <span style="margin-left:40px;font-weight:bolder;">紧急联系人</span>
                         </div>
-                        <el-form-item label="联系人姓名" prop="controllerName">
+                        <el-form-item label="联系人姓名" prop="emergencyContactName">
                             <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerName" ></el-input>
+                                <el-input v-model="loanFormInfo.emergencyContactName" ></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="联系人手机" prop="controllerCard">
+                        <el-form-item label="联系人手机" prop="emergencyContactPhone">
                             <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerCard"></el-input>
+                                <el-input v-model="loanFormInfo.emergencyContactPhone"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="联系人关系" prop="controllerCard">
+                        <el-form-item label="联系人关系" prop="emergencyContactRelationship">
                             <el-col :span="12">
-                                <el-input v-model="allForm.controllerInfo.controllerCard"></el-input>
+                                <el-radio-group v-model="loanFormInfo.emergencyContactRelationship">
+                                    <el-radio-button label="1">夫妻</el-radio-button>
+                                    <el-radio-button label="2">父母</el-radio-button>
+                                    <el-radio-button label="3">子女</el-radio-button>
+                                    <el-radio-button label="4">同事</el-radio-button>
+                                    <el-radio-button label="5">其他</el-radio-button>
+                                </el-radio-group>
                             </el-col>
                         </el-form-item>
                     </div>
                     <div class="btn-box">
-                        <router-link to="/shopAuth"><div class="btn2" style="margin-right:20px;"> 上一步</div></router-link>
-                        <div class="btn" @click="addActive"> 下一步</div>
+                        <div class="btn2" style="margin-right:20px;" @click="back"> 上一步</div>
+                        <div class="btn" @click="addActive('loanFormInfo')"> 下一步</div>
                     </div>
                 </el-form>
             </el-card>
@@ -62,7 +68,6 @@
 import VDistpicker from 'v-distpicker'
 import Footer from './layout/footer'
 import Head from './layout/head'
-import { addCiCompany, getAuthUserBasicInfo } from '@/api/application'
 export default {
   components: {
     Footer,              // 底部
@@ -73,66 +78,38 @@ export default {
     return {
             active:1,
             num:2,
-            activeName:'实际控制人信息',
             loading: false,
-            allForm:{
-                controllerInfo: {
-                    controllerName: '',
-                    controllerCard: '',
-                    controllerTelephone: '',
-                    controllerEmail:'',
-                    controllerEducation: '',
-                    maritalStatus: '已婚',
-                    spouseName:'',
-                    spouseCard:'',
-                    spouseTelephone:'',
-                    liveAddress:{
-                        province:'',
-                        city:'',
-                        area:'',
-                        Street:''
-                    },
+            loanFormInfo: {
+                emergencyContactName:'',
+                emergencyContactPhone:'',
+                emergencyContactRelationship: '1',
+                contactEmail:'',
+                contactLocation: {
+                    province:'',
+                    city:'',
+                    area:'',
+                    Street:''
                 },
-                personInfo: {
-                    legalPersonName: '',
-                    idCard: '',
-                    legalPersonPhone: '',
-                    legalPersonEmail:'',
-                    liveAddress: {
-                        province:'',
-                        city:'',
-                        area:'',
-                        Street:''
-                    },
-                    workAddress: {
-                        province:'',
-                        city:'',
-                        area:'',
-                        Street:''
-                    },
-                },
-                companyInfo: {
-                    companyName: '',
-                    creditCode: '',
-                    legalPersonName: '',
-                    workAddress:{
-                        province:'',
-                        city:'',
-                        area:'',
-                        Street:''
-                    },
-                    businessHours: '',
-                    salesVolume: '',
-                    returnRate:'',
-                    shopHours:'',
-                    salesShare:'',
-                    closingRate:'',
-                    creditReporting:'',
-                    creditEnquiryFrequency:'',
-                    openingBank:'',
-                    openingBankAccount:'',
-                    logisticsCooperationDuration:''
-                },
+            },
+            rules: {
+                contactEmail: [
+                    { required: true, message: '请输入', trigger: 'blur' },
+                    { pattern: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, message: '请输入正确的邮箱' }
+                ],
+                contactLocation: [
+                    { required: true, message: '请输入', trigger: 'blur' },
+                ],
+                emergencyContactName: [
+                    { required: true, message: '请输入', trigger: 'blur' },
+                    { pattern: /^[\u4E00-\u9FA5]{2,8}$/, message: '姓名长度为2-8文字' }
+                ],
+                emergencyContactPhone: [
+                    { required: true, message: '请输入', trigger: 'blur' },
+                    { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码' }
+                ],
+                emergencyContactRelationship: [
+                    { required: true, message: '请选择', trigger: 'blur' },
+                ],
             },
         }
     },
@@ -142,40 +119,28 @@ export default {
     },
     methods: {
       //注册
-        addActive() {
-            this.$router.push({path:'/uploadInfo'})
+        addActive(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    if(!this.loanFormInfo.contactLocation.province||!this.loanFormInfo.contactLocation.city||!this.loanFormInfo.contactLocation.area||!this.loanFormInfo.contactLocation.Street){
+                        this.$message.warning('居住地址不能为空')
+                        return
+                    }
+                    let myData = Object.assign(JSON.parse(localStorage.getItem('loanFormInfo')), this.loanFormInfo)
+                    localStorage.setItem('loanFormInfo', JSON.stringify(myData))
+                    this.$router.push({path:'/uploadInfo'})
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+            
         },
-        nameReg(value, callback){
-            if(!(/^[\u4E00-\u9FA5]{2,8}$/.test(value))) {
-                this.$message.warning('请填写正确的姓名，2-8个字之间。')
-                return false
-            }else{
-                return true
-            }
+        back(){
+            window.history.go(-1)
         },
-        checkEmail(value, callback){
-            if(!(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value))) {
-                this.$message.warning('请填写正确的邮箱格式。')
-                return false
-            } else{
-                return true
-            }
-        },
-        checkIdCard(value, callback){
-            if(!(/^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value))) {
-                this.$message.warning('请填写正确的身份证号')
-                return false
-            }else{
-                return true
-            }
-        },
-        checkPhone(value, callback){
-            if(!(/^1[3456789]\d{9}$/.test(value))) {
-                this.$message.warning('请填写正确的手机号')
-                return false
-            }else{
-                return true
-            }
+        onSelectedA(data) {
+            Object.assign(this.loanFormInfo.contactLocation, {province: data.province.value, city: data.city.value, area: data.area.value})
         }
     }   
 }

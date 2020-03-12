@@ -23,7 +23,7 @@
                         <div class="box">
                             <div class="word">年销售额
                             </div>
-                            <div class="num">0<span>万</span></div>
+                            <div class="num">{{shopInfo.soldAmount}}<span>万</span></div>
                         </div>
                         <div class="box">
                             <div class="word">可收款金额
@@ -42,30 +42,16 @@
                             ref="multipleTable"
                             :data="tableDataA"
                             tooltip-effect="dark"
-                            style="width: 100%"
-                            @selection-change="handleSelectionChange">
-                            <el-table-column type="selection" width="55"></el-table-column>
-                            <el-table-column align="center" label="店铺名称" width="140">
-                                <template slot-scope="scope">{{ scope.row.shopName }}</template>
-                            </el-table-column>
-                            <el-table-column align="center" prop="type" label="平台" width="120"></el-table-column>
+                            style="width: 100%">
+                            <el-table-column align="center" prop="shopName" label="店铺名称" width="120"></el-table-column>
+                            <el-table-column align="center" prop="type" label="平台" width="120">wish</el-table-column>
                             <el-table-column align="center" prop="marketPlaceId" label="站点" show-overflow-tooltip></el-table-column>
                             <el-table-column align="center" prop="d" label="授权状态" show-overflow-tooltip></el-table-column>
-                            <el-table-column align="center" prop="e" label="销售额" show-overflow-tooltip></el-table-column>
+                            <el-table-column align="center" prop="sumAmount" label="销售额" show-overflow-tooltip></el-table-column>
                             <el-table-column align="center" prop="loanOperationTime" label="可收款金额" :formatter="dateFormat" show-overflow-tooltip></el-table-column>
-                            <el-table-column align="center" prop="address" label="操作" show-overflow-tooltip>
-                                <template slot-scope="scope">
-                                    <el-button
-                                        @click="deleteRow(scope.row.id)"
-                                        type="text"
-                                        size="small">
-                                        查看
-                                    </el-button>
-                                </template>
-                            </el-table-column>
                         </el-table>
                         <div class="btn-box">
-                            <router-link to="/businessInfo"><div class="btn2" @click="next"> 上一步</div></router-link>
+                            <div class="btn2" @click="back"> 上一步</div>
                             <div class="btn" @click="next"> 下一步</div>
                         </div>
                 </el-card>
@@ -77,7 +63,7 @@
 <script>
 import Head from './layout/head'
 import moment from 'moment'
-import { shopInfo, getShopList, shopCredit } from '@/api/application'
+import { shoplist, shopstatistic } from '@/api/application'
 export default {
   components: {
     Head,              // 步骤条
@@ -85,20 +71,12 @@ export default {
   data() {
     return {
             shopInfo:{
-                userId:'',     //用户id
-                platformId:'',     //平台id
-                platform:'',     //平台名称
-                shopCount:'',     //店铺数量
-                volumeAll:'',     //总销售额/单位元
-                volumeMonthAverage:'',     //月均销售额/单位元
-                refundAll:'',     //总退款额/单位元
-                refundMonthAverage:'',     //月均退款额/单位元
+                shopCount:'',     
+                soldAmount:'',     
             },
             activeName:'first',
             num:1,
             tableDataA: [],
-            tableDataB: [],
-            tableDataC: [],
             multipleSelection: [],
             submitForm:{
                 ids:[],
@@ -110,16 +88,26 @@ export default {
     },
     mounted(){
         // 获取店铺信息
-        shopInfo().then(res => {
+        shoplist().then(res => {
             this.loading = false
-            this.bankList = res.data.list
+            this.tableDataA = res.data
         }).catch(err=>{
             this.loading = false
             this.$message.error(err.msg)
         })
-        this.shouxin(0)
+
+        shopstatistic().then(res => {
+            this.loading = false
+            this.shopInfo = res.data
+        }).catch(err=>{
+            this.loading = false
+            this.$message.error(err.msg)
+        })
     },
     methods: {
+        back(){
+            window.history.go(-1)
+        },
         handleClick(tab, event) {
             if(this.activeName=='first'){
                 this.shouxin(0)
@@ -129,47 +117,11 @@ export default {
                 this.shouxin(2)
             }
         },
-        shouxin(status){
-            // 店铺列表（授信）
-            getShopList({status:status,productId:JSON.parse(localStorage.getItem('loanFormInfo')).productId}).then(res => {
-                this.loading = false
-                if(this.activeName=='first'){
-                    this.tableDataA = res.data.list
-                }else if(this.activeName=='second'){
-                    this.tableDataB = res.data.list
-                }else if(this.activeName=='third'){
-                    this.tableDataC = res.data.list
-                }
-            }).catch(err=>{
-                this.loading = false
-                this.$message.error(err.msg)
-            })
-        },
         deleteRow(id){
             this.$router.push({path: `/shopDetails?shopId=${id}`})
         },
-        jump(){
-            this.$router.push({path: '/authorize'})
-        },
         next(){
             this.$router.push({path: '/supplyInfo'})
-            // if(this.submitForm.ids.length<=0){
-            //     this.$message.warning("请先勾选店铺")
-            //     return
-            // }
-            // this.submitForm.productId = JSON.parse(localStorage.getItem('loanFormInfo')).productId
-            // shopCredit(this.submitForm).then(res => {
-            //     this.loading = false
-            //     this.$message.success(res.msg)
-            //     this.$router.push({path: '/supplyInfo'})
-            // }).catch(err=>{
-            //     this.loading = false
-            //     this.$message.error(err.msg)
-            // })
-        },
-        handleSelectionChange(val) {
-            this.submitForm.ids = val.map(element => element.id);
-            this.multipleSelection = val;
         },
          //时间格式化
         dateFormat(row, column) {

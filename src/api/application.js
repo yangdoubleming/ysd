@@ -102,3 +102,33 @@ export function getLoanShopDetails(data) {
         data:data
     })
 }
+// ===========================================================应收贷
+
+export function receivablesloan(data) {
+    return request({
+        url: `receivablesloan/submit`,
+        method: 'post',
+        data:data
+    })
+}
+
+export function sendVerifyCode() {
+    return request({
+        url: `receivablesloan/sendVerifyCode`,
+        method: 'get'
+    })
+}
+
+export function shoplist() {
+    return request({
+        url: `receivablesloan/shoplist`,
+        method: 'get'
+    })
+}
+
+export function shopstatistic() {
+    return request({
+        url: `receivablesloan/shopstatistic`,
+        method: 'get'
+    })
+}
