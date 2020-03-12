@@ -48,8 +48,9 @@
                             </el-col>
                         </el-form-item>
                     </div>
-                    <div style="margin-left:150px;overflow:hidden;margin-bottom:30px">
-                        <div class="submit-btn" style="margin-left:30px;float:left;" @click="addActive">下一步</div>
+                    <div class="btn-box">
+                        <router-link to="/shopAuth"><div class="btn2" style="margin-right:20px;"> 上一步</div></router-link>
+                        <div class="btn" @click="addActive"> 下一步</div>
                     </div>
                 </el-form>
             </el-card>
@@ -138,62 +139,11 @@ export default {
     computed: {
     },
     mounted(){
-        this.getAuthUserBasicInfo()
     },
     methods: {
       //注册
-        reduceActive() {
-            this.active--
-            this.active==2?this.activeName = "法人代表信息":this.activeName = "实际控制人信息"
-        },
         addActive() {
-            this.$router.push({path: '/uploadInfo'})
-        },
-        submit(formName) {
-            if(!this.allForm.companyInfo.salesVolume||!this.allForm.companyInfo.legalPersonName||!this.allForm.companyInfo.logisticsCooperationDuration||!this.allForm.companyInfo.workAddress.province||!this.allForm.companyInfo.workAddress.city||!this.allForm.companyInfo.workAddress.area||!this.allForm.companyInfo.workAddress.Street){
-                this.$message.warning('请填写该页必填字段')
-                return
-            }
-            if(!this.nameReg(this.allForm.companyInfo.legalPersonName)){
-                return
-            }
-            addCiCompany({controllerInfo:this.allForm.controllerInfo,personInfo:this.allForm.personInfo,companyInfo:this.allForm.companyInfo}).then(res => {
-                this.loading = false
-                this.$message.success(res.msg)
-                this.$router.push({path: '/uploadInfo'})
-            }).catch(err=>{
-                this.loading = false
-                this.$message.error(err.msg||'提交失败')
-            })
-            
-        },
-        onSelectedA(data) {
-            Object.assign(this.allForm.controllerInfo.liveAddress, {province: data.province.value, city: data.city.value, area: data.area.value})
-        },
-        onSelectedB(data) {
-            Object.assign(this.allForm.personInfo.liveAddress, {province: data.province.value, city: data.city.value, area: data.area.value})
-        },
-        onSelectedC(data) {
-            Object.assign(this.allForm.personInfo.workAddress, {province: data.province.value, city: data.city.value, area: data.area.value})
-        },
-        onSelectedD(data) {
-            Object.assign(this.allForm.companyInfo.workAddress, {province: data.province.value, city: data.city.value, area: data.area.value})
-        },
-        getAuthUserBasicInfo(){
-            this.loading = true;
-            getAuthUserBasicInfo().then(res => {
-                this.loading = false
-                this.allForm.controllerInfo.controllerName = res.data.loanInfo.loanName  //实际控制人姓名
-                this.allForm.controllerInfo.controllerCard = res.data.loanInfo.loanCard  //实际控制人身份证
-                this.allForm.controllerInfo.controllerTelephone = res.data.loanInfo.loanTelephone  //实际控制人手机号
-                this.allForm.controllerInfo.controllerEmail = res.data.loanInfo.loanEmail  //实际控制人邮箱
-                // this.allForm.enterpriseInfo.theSamePerson = String(this.enterpriseInfo.theSamePerson)
-                this.allForm.companyInfo.companyName = res.data.enterpriseInfo.companyName  //企业名称
-                this.allForm.companyInfo.creditCode = res.data.enterpriseInfo.creditCode  //实际控制人手机号
-            }).catch(err=>{
-                this.loading = false
-                this.$message.error(err.msg)
-            })
+            this.$router.push({path:'/uploadInfo'})
         },
         nameReg(value, callback){
             if(!(/^[\u4E00-\u9FA5]{2,8}$/.test(value))) {
@@ -346,7 +296,7 @@ export default {
     margin-right: 24px;
 }
 .btn{
-    width: 200px;
+    width: 150px;
     height: 46px;
     line-height: 46px;
     text-align: center;
@@ -356,6 +306,24 @@ export default {
     border-radius: 6px;
     cursor: pointer;
 }
+.btn2{
+    width: 150px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    border:1px solid #9C9D9C;
+    color: #9C9D9C;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-box{
+            margin-left: 180px;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+        }
 .inp{
     width: 220px;;
 }

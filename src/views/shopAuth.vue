@@ -64,8 +64,12 @@
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <div class="btn-box">
+                            <router-link to="/businessInfo"><div class="btn2" @click="next"> 上一步</div></router-link>
+                            <div class="btn" @click="next"> 下一步</div>
+                        </div>
                 </el-card>
-                <button class="btn" @click="next"> 下一步</button>
+                
             </div>
     </section>
 </template>
@@ -266,7 +270,8 @@ export default {
         
         .btn{
             display: block;
-            width: 200px;
+            cursor: pointer;
+            width: 150px;
             height: 46px;
             line-height: 46px;
             text-align: center;
@@ -275,6 +280,26 @@ export default {
             border: 0;
             border-radius: 6px;
             margin: 20px auto;
+        }
+        .btn2{
+    width: 150px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    border:1px solid #9C9D9C;
+    color: #9C9D9C;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+        .btn-box{
+            width: 320px;
+            margin: 0 auto;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
         }
     }
 </style>

@@ -40,9 +40,10 @@
                                 <a style="color:#409EFF;cursor:pointer;" href="./index_files/豆沙包商户平台注册协议.pdf" target="_blank" >《豆沙包平台服务协议》</a>
                             </span>
                         </el-form-item>
-                        <el-form-item>
-                            <div class="submit-btn" @click="submitRegisterForm('registerForm')">提交申请</div>
-                        </el-form-item>
+                        <div class="btn-box">
+                            <router-link to="/shopAuth"><div class="btn2" style="margin-right:20px;"> 上一步</div></router-link>
+                            <div class="btn" @click="submitRegisterForm('registerForm')">提交申请</div>
+                        </div>
                     </el-form>
                 </div>
             </el-card>
@@ -118,14 +119,16 @@ export default {
     
   },
   mounted(){
-      this.getPhotoCode()
+    //   this.getPhotoCode()
   },
   methods: {
-      goback(){
-          window.history.go(-1);
-      },
+    //   goback(){
+    //       window.history.go(-1);
+    //   },
     //注册
     submitRegisterForm(formName) {
+        this.num = 4
+        this.$router.push({path: '/summary'})
     // this.$refs[formName].validate((valid) => {
     //     if (valid) {
     //         if(this.registerForm.password!=this.registerForm.confirmPassword){
@@ -241,4 +244,32 @@ export default {
         background: linear-gradient(90deg, #950bbe, #fa0391, #fe6caa);
         cursor: pointer;
     }
+    .btn{
+    width: 150px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    background: #E51E5F;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn2{
+    width: 150px;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    border:1px solid #9C9D9C;
+    color: #9C9D9C;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-box{
+            margin-left: 100px;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+        }
 </style>

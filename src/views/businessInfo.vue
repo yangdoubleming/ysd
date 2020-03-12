@@ -5,7 +5,7 @@
             <div class="loan-box">
                 <div class="bank-box">
                     <div class="bankActive" >提前付（一口价）
-                        <img :src="gou" style="float:right;margin-top:27px;" />
+                        <img :src="gou" style="float:right;margin-top:28px;" />
                     </div>
                 </div>
                 <div style="margin:10px 50px; margin-top:20px;">
@@ -67,7 +67,7 @@
                             42.52元
                         </el-col>
                     </el-form-item>
-                    <div class="submit-btn" style="margin-left:120px;" @click="submitRegisterForm('loanFormInfo')">下一步</div>
+                    <div class="btn" style="margin-left:120px;" @click="submitRegisterForm('loanFormInfo')">下一步</div>
                 </el-form>
             </div>
         </div> 
@@ -388,7 +388,7 @@ export default {
     margin-right: 24px;
 }
 .btn{
-    width: 200px;
+    width: 150px;
     height: 46px;
     line-height: 46px;
     text-align: center;
